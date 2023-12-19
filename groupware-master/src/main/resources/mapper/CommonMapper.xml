@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace = "com.management.common.CommonDAO">
+    	<resultMap type="MemberDTO" id="userInfo">
+    		<result column="id" property="id"/>
+    		<result column="pw" property="pw"/>
+    		<result column="name" property="name"/>
+    		<result column="authority" property="authority"/>
+    		<association property="deptDto" javaType="DeptDTO">
+    			<result column="dept_name" property="dept_name"/>
+    		</association>
+    		<association property="rankDto" javaType="RankDTO">
+				<result column="rank_name" property="rank_name"/>    		
+    		</association>
+    	</resultMap>
+    	
+    	<select id="userInfo" parameterType = "string" resultMap = "userInfo">
+    		SELECT
+    			member.id, member.name, rank.rank_name, dept.dept_name
+    		FROM
+    			member
+    		JOIN
+    			dept
+    		ON
+    			member.dept_no = dept.dept_no
+    		JOIN
+    			rank
+    		ON
+    			member.rank_no = rank.rank_no
+    		WHERE 
+    			member.id = #{id}
+    	</select>
+    	
+    	<select id="signProcessCount" parameterType="string" resultType="int">
+    		SELECT
+    			COUNT(*)
+    		FROM
+    			sign
+    		WHERE
+    			id = #{id}
+    	</select>
+    	
+    	<select id="signStayCount" parameterType="string" resultType="int">
+    		SELECT
+    			COUNT(*)
+    		FROM
+    			sign_path
+    		WHERE
+    			sign_path.id = #{id}
+    		AND
+    			sign_path.state_no = 1
+    	</select>
+    	
+    	<select id="signFinishCount" parameterType="string" resultType="int">
+    		SELECT
+    			COUNT(*)
+    		FROM
+    			sign
+    		WHERE
+    			id = #{id}
+    		AND
+    			state_no = 2
+    	</select>
+    	
+    	<select id="checkUser" parameterType="string" resultType="int">
+    		SELECT
+    			COUNT(*)
+    		FROM
+    			sign_path
+    		WHERE
+    			id = #{id}
+    	</select>
+    	
+    	<select id="checkUser2" parameterType="string" resultType="int">
+    		SELECT
+    			COUNT(*)
+    		FROM
+    			sign
+    		WHERE
+    			id = #{id}
+    	</select>
+    </mapper>
